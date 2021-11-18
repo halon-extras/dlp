@@ -1,0 +1,24 @@
+[
+    {
+        "name": "dlp",
+        "parameters": {
+            "required": [
+                {
+                    "name": "file",
+                    "type": "File"
+                }
+            ],
+            "optional": [
+                {
+                    "name": "options",
+                    "type": "array"
+                }
+            ]
+        },
+        "returnType": "array or none",
+        "detail": "dlp(File $file, [, array $options]): array or none",
+        "value": "dlp($0)",
+        "documentation": "Scan a File using the [DLP](https://docs.halon.io/go/dlp) engine. On error none is returned.",
+        "link": "[Full documentation](https://github.com/halon-extras/dlp)"
+    }
+]
