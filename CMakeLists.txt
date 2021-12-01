@@ -5,7 +5,6 @@ PROJECT("dlp" VERSION 1.0.0)
 SET(CPACK_GENERATOR "DEB")
 
 SET(CMAKE_BUILD_TYPE Release)
-SET(CMAKE_C_FLAGS_RELEASE "-Wall -Wvla -Wshadow -Wconversion -Wno-sign-conversion -O2 -fno-strict-aliasing -Wextra -Wno-unused-parameter")
 SET(CMAKE_CXX_FLAGS_RELEASE "-std=c++17 -Wall -Wvla -Wshadow -Wconversion -Wno-sign-conversion -Wno-c++11-narrowing -O2 -fno-strict-aliasing -Wextra -Wno-unused-parameter")
 
 ADD_LIBRARY(dlp SHARED
@@ -50,7 +49,7 @@ IF (CPACK_GENERATOR MATCHES "DEB")
 ENDIF()
 IF (CPACK_GENERATOR MATCHES "RPM")
 	SET(CPACK_RPM_PACKAGE_AUTOREQPROV ON)
-	SET(CPACK_RPM_PACKAGE_REQUIRES "halon >= 5.8 libbsd")
+	SET(CPACK_RPM_PACKAGE_REQUIRES "halon >= 5.8")
 	SET(CPACK_RPM_POST_INSTALL_SCRIPT_FILE "${CMAKE_CURRENT_SOURCE_DIR}/postinst")
 	SET(CPACK_RPM_POST_UNINSTALL_SCRIPT_FILE "${CMAKE_CURRENT_SOURCE_DIR}/postrm")
 ENDIF()
