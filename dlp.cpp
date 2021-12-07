@@ -92,7 +92,7 @@ void dlp(HalonHSLContext* hhc, HalonHSLArguments* args, HalonHSLValue* ret)
 
 	char* out = nullptr;
 	size_t r;
-	if (!HalonMTA_hsl_value_to_json(a, &out, &r))
+	if (a && !HalonMTA_hsl_value_to_json(a, &out, &r))
 	{
 		HalonHSLValue* x = HalonMTA_hsl_throw(hhc);
  		HalonMTA_hsl_value_set(x, HALONMTA_HSL_TYPE_EXCEPTION, out, 0);
