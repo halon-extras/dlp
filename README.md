@@ -45,6 +45,8 @@ The following options are available in the **options** array.
   - sha1hash `array` - List of SHA1 checksums in hex format
   - sha2hash `array` - List of SHA2 checksums in hex format (either 256 or 512)
 
+Do not allow untrusted users to add custom regular expression, since not all regular expressions are safe. All user data should be escaped using pcre_quote() before compiled into a regular expression.
+
 **Example**
 
 ```
@@ -72,3 +74,9 @@ echo dlp(
 **Returns**
 
 An associative array, with a `result` property containing a list of matched rules (each result item contains a `partid` (refering to the MIME part ID) and a `name` property). If an error occures an `error` property (string) is set contaning the error message.
+
+The following builtin result may be triggered.
+
+- `ERR_UNKNOWN_ERROR` - An unknown error occurred (more details may be available in the log)
+- `ERR_PASSWORD_PROTECTED` - The archive is password protected
+- `ERR_RECURSION_LIMIT` - The archive is too nested
