@@ -23,7 +23,7 @@ For the configuration schema, see [dlp-app.schema.json](dlp-app.schema.json).
 
 ### dlp(fp [, options])
 
-Scan the `fp` (File pointer) using the DLP engine. The `option` paramter let you use custom filters and change the behaviour.
+Scan the `fp` (File pointer) using the DLP engine. The `options` parameter let you use custom filters and change the behaviour.
 
 **Params**
 
