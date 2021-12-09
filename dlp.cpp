@@ -78,7 +78,7 @@ void dlp(HalonHSLContext* hhc, HalonHSLArguments* args, HalonHSLValue* ret)
 {
 	m.lock();
 	std::string path = cpath, address = caddress;
-	size_t port = cport, connect_timeout = 0, timeout = 0;
+	size_t port = cport, connect_timeout = 5, timeout = 0;
 	m.unlock();
 
 	FILE* fp;
