@@ -32,6 +32,11 @@ Scan the `fp` (File pointer) using the DLP engine. The `options` parameter let y
 
 The following options are available in the **options** array.
 
+- path `string` - Path to a the dlpd unix socket. The default is /var/run/halon/dlpd.sock.
+- address `string` - Host of the dlpd server.
+- port `number` - Port of the dlpd server.
+- connect_timeout `number` - The connect timeout. The default is no timeout.
+- timeout `number` - The timeout. The default is 5 seconds.
 - id `string` - The log ID to associate with the scan request.
 - short_circuit `bool` - Stop on first match. The default is `false`.
 - time_limit `number` - Maximum time spent scanning. The default is `0` (no limit).

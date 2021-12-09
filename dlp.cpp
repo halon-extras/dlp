@@ -7,9 +7,9 @@
 #include <string>
 
 std::mutex m;
-std::string path;
-unsigned short port = 0;
-std::string address;
+std::string cpath;
+unsigned short cport = 0;
+std::string caddress;
 
 HALON_EXPORT
 int Halon_version()
@@ -26,15 +26,15 @@ bool Halon_init(HalonInitContext* hic)
 
 	const char* path_ = HalonMTA_config_string_get(HalonMTA_config_object_get(cfg, "path"), nullptr);
 	if (path_)
-		path = path_;
+		cpath = path_;
 
 	const char* port_ = HalonMTA_config_string_get(HalonMTA_config_object_get(cfg, "port"), nullptr);
 	if (port_)
-		port = (unsigned short)strtoul(port_, nullptr, 0);
+		cport = (unsigned short)strtoul(port_, nullptr, 0);
 
 	const char* address_ = HalonMTA_config_string_get(HalonMTA_config_object_get(cfg, "address"), nullptr);
 	if (address_)
-		address = address_;
+		caddress = address_;
 
 	curl_global_init(CURL_GLOBAL_ALL);
 	return true;
@@ -46,21 +46,21 @@ void Halon_config_reload(HalonConfig* hc)
 	std::lock_guard<std::mutex> lg(m);
 	const char* path_ = HalonMTA_config_string_get(HalonMTA_config_object_get(hc, "path"), nullptr);
 	if (path_)
-		path = path_;
+		cpath = path_;
 	else
-		path.clear();
+		cpath.clear();
 
 	const char* port_ = HalonMTA_config_string_get(HalonMTA_config_object_get(hc, "port"), nullptr);
 	if (port_)
-		port = (unsigned short)strtoul(port_, nullptr, 0);
+		cport = (unsigned short)strtoul(port_, nullptr, 0);
 	else
-		port = 0;
+		cport = 0;
 
 	const char* address_ = HalonMTA_config_string_get(HalonMTA_config_object_get(hc, "address"), nullptr);
 	if (address_)
-		address = address_;
+		caddress = address_;
 	else
-		address.clear();
+		caddress.clear();
 }
 
 HALON_EXPORT
@@ -76,6 +76,11 @@ size_t curl_string_writer(char *data, size_t size, size_t nmemb, std::string *ou
 
 void dlp(HalonHSLContext* hhc, HalonHSLArguments* args, HalonHSLValue* ret)
 {
+	m.lock();
+	std::string path = cpath, address = caddress;
+	size_t port = cport, connect_timeout = 0, timeout = 0;
+	m.unlock();
+
 	FILE* fp;
 	const HalonHSLValue* a = HalonMTA_hsl_argument_get(args, 0);
 
@@ -89,6 +94,52 @@ void dlp(HalonHSLContext* hhc, HalonHSLArguments* args, HalonHSLValue* ret)
 	}
 
 	a = HalonMTA_hsl_argument_get(args, 1);
+
+	if (a && HalonMTA_hsl_value_type(a) == HALONMTA_HSL_TYPE_ARRAY)
+	{
+		size_t index = 0;
+		HalonHSLValue *k, *v;
+		while ((v = HalonMTA_hsl_value_array_get(a, index++, &k)))
+		{
+			char* string;
+			size_t stringl;
+			double number;
+			if (!HalonMTA_hsl_value_get(k, HALONMTA_HSL_TYPE_STRING, &string, &stringl))
+				continue;
+			if (std::string(string, stringl) == "address")
+			{
+				if (!HalonMTA_hsl_value_get(v, HALONMTA_HSL_TYPE_STRING, &string, &stringl))
+					continue;
+				address = std::string(string, stringl);
+			}
+			if (std::string(string, stringl) == "port")
+			{
+				if (!HalonMTA_hsl_value_get(v, HALONMTA_HSL_TYPE_NUMBER, &number, nullptr))
+					continue;
+				port = (size_t)number;
+				path = "";
+			}
+			if (std::string(string, stringl) == "connect_timeout")
+			{
+				if (!HalonMTA_hsl_value_get(v, HALONMTA_HSL_TYPE_NUMBER, &number, nullptr))
+					continue;
+				connect_timeout = (size_t)number;
+			}
+			if (std::string(string, stringl) == "timeout")
+			{
+				if (!HalonMTA_hsl_value_get(v, HALONMTA_HSL_TYPE_NUMBER, &number, nullptr))
+					continue;
+				timeout = (size_t)number;
+			}
+			if (std::string(string, stringl) == "path")
+			{
+				if (!HalonMTA_hsl_value_get(v, HALONMTA_HSL_TYPE_STRING, &string, &stringl))
+					continue;
+				path = std::string(string, stringl);
+				port = 0;
+			}
+		}
+	}
 
 	char* out = nullptr;
 	size_t r;
@@ -116,7 +167,6 @@ void dlp(HalonHSLContext* hhc, HalonHSLArguments* args, HalonHSLValue* ret)
  
 	std::string data;
 
-	m.lock();
 	if (!port)
 	{
 		curl_easy_setopt(curl, CURLOPT_UNIX_SOCKET_PATH, (!path.empty()) ? path.c_str() : "/var/run/halon/dlpd.sock");
@@ -126,11 +176,12 @@ void dlp(HalonHSLContext* hhc, HalonHSLArguments* args, HalonHSLValue* ret)
 	{
 		curl_easy_setopt(curl, CURLOPT_URL, ("http://" + ((!address.empty()) ? address : "127.0.0.1") + ":" + std::to_string(port) + "/v1/scan").c_str());
 	}
-	m.unlock();
 
 	curl_easy_setopt(curl, CURLOPT_MIMEPOST, form);
-  	curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 5);
-	curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30);
+	if (timeout)
+		curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
+	if (connect_timeout)
+		curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, connect_timeout);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_string_writer);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &data);
 
