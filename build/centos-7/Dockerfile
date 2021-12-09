@@ -27,9 +27,9 @@ ENV BASH_ENV="/usr/bin/scl_enable" \
 RUN yum install -y cmake3 make gcc-c++ rpm-build
 RUN mkdir /tmp/halon
 RUN cd /tmp/halon \
-    && curl -O -L https://github.com/curl/curl/releases/download/curl-7_75_0/curl-7.75.0.tar.gz \
-    && tar -zxvf curl-7.75.0.tar.gz && cd curl-7.75.0 \
-    && LD_LIBRARY_PATH=/usr/local/lib64 ./configure --without-ldap \
+    && curl -O -L https://github.com/curl/curl/releases/download/curl-7_80_0/curl-7.80.0.tar.gz \
+    && tar -zxvf curl-7.80.0.tar.gz && cd curl-7.80.0 \
+    && LD_LIBRARY_PATH=/usr/local/lib64 ./configure --without-ssl --without-ldap \
     && make && make install \
     && cp /usr/local/lib/pkgconfig/libcurl.pc /usr/lib64/pkgconfig/ \
     && rm /usr/local/bin/curl
