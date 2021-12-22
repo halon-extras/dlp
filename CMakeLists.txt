@@ -43,6 +43,7 @@ ENDIF()
 
 INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/dlp.so DESTINATION plugins)
 INSTALL(FILES dlp-app.schema.json DESTINATION share/plugins/)
+INSTALL(FILES dlp.functions.json DESTINATION share/plugins/)
 
 IF(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.14.0") 
 	FILE(CREATE_LINK "/opt/halon/plugins/dlp.so" "${CMAKE_CURRENT_BINARY_DIR}/dlp.so.link" SYMBOLIC)
