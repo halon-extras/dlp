@@ -11,8 +11,8 @@ echo dlp(
             [ "name" => "EICAR_SHA1", "sha1hash" => ["3395856ce81f2b7382dee72602f798b642f14140"] ],
             [ "name" => "EICAR_SHA2_256", "sha2hash" => ["275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"] ],
             [ "name" => "EICAR_SHA2_512", "sha2hash" => ["cc805d5fab1fd71a4ab352a9c533e65fb2d5b885518f4e565e68847223b8e6b85cb48f3afad842726d99239c9e36505c64b0dc9a061d9e507d833277ada336ab"] ],
-            [ "name" => "EICAR_REGEXP", "regexp" => ["/STANDARD-ANTIVIRUS-TEST/"] ],
-            [ "name" => "EICAR_SUBJECT_REGEXP", "regexp" => ["/Eicar Test/"] ],
+            [ "name" => "EICAR_REGEX", "regex" => ["/STANDARD-ANTIVIRUS-TEST/"] ],
+            [ "name" => "EICAR_SUBJECT_REGEX", "regex" => ["/Eicar Test/"] ],
             [ "name" => "EICAR_MIME", "mimetype" => ["/^text\\/virus$/"] ],
         ]
     ]
