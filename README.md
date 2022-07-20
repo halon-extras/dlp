@@ -78,7 +78,7 @@ echo dlp(
 
 **Returns**
 
-An associative array, with a `result` property containing a list of matched rules (each result item contains a `partid` (refering to the MIME part ID) and a `name` property). If an error occures an `error` property (string) is set contaning the error message.
+An associative array, with a `result` property containing a list of matched rules (each result item contains a `partid` (refering to the MIME part ID) and a `rule` property which is the name of the rule). If an error occures an `error` property (string) is set contaning the error message.
 
 The following builtin result may be triggered.
 
