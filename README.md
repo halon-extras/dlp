@@ -55,6 +55,8 @@ Do not allow untrusted users to add custom regular expression, since not all reg
 **Example**
 
 ```
+import { dlp } from "extras://dlp";
+
 echo dlp(
     MIME()
         ->addHeader("Subject", "Eicar Test")
