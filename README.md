@@ -21,6 +21,8 @@ For the configuration schema, see [dlp-app.schema.json](dlp-app.schema.json).
 
 ## Exported functions
 
+These functions needs to be [imported](https://docs.halon.io/hsl/structures.html#import) from the `extras://dlp` module path.
+
 ### dlp(fp [, options])
 
 Scan the `fp` (File pointer) using the DLP engine. The `options` parameter let you use custom filters and change the behaviour.
