@@ -15,10 +15,10 @@ RUN echo "deb [arch=`dpkg --print-architecture` signed-by=/usr/share/keyrings/ha
 RUN echo "machine repo.halon.io login ${HALON_REPO_USER} password ${HALON_REPO_PASS}" >> /etc/apt/auth.conf
 RUN apt-get update && apt-get install -y halon=6.3.0
 
-RUN apt-get install -y build-essential cmake file
+RUN apt-get update &&  apt-get install -y build-essential cmake file
 RUN echo -n "UBU2404" > /OSRELEASE.txt
 
-RUN apt-get install -y libcurl4-openssl-dev
+RUN apt-get update && apt-get install -y libcurl4-openssl-dev
 
 COPY build.sh /build.sh
 CMD ["/build.sh"]
